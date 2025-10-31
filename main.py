@@ -2,9 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional
-
-# Import from your DB setup file (where Job, SessionLocal were defined)
-from db import SessionLocal, Job 
+from db import SessionLocal, Job
 
 app = FastAPI()
 
