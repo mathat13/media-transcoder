@@ -5,7 +5,7 @@ from sqlalchemy.pool import StaticPool
 
 from db import Base
 from factories import JobFactory
-from main import app, get_db
+from main import app, get_db_session
 
 TEST_DATABASE_URL = "sqlite:///:memory:"
 
@@ -28,18 +28,15 @@ def db_session():
     session = TestingSessionLocal()
     JobFactory._meta.sqlalchemy_session = session
 
-    session.begin_nested()
-
     # Override FastAPI DB dependency for this test only
-    def override_get_db():
+    def override_get_db_session():
         try:
             yield session
         finally:
             pass
 
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_db_session] = override_get_db_session
 
     yield session
 
-    session.rollback()
     session.close()

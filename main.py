@@ -20,15 +20,15 @@ class JobUpdate(BaseModel):
     path: Optional[str] = None
 
 # Dependency to get db session
-def get_db():
-    db = SessionLocal()
+def get_db_session():
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
 
 @app.post("/webhook", response_model=JobResponse)
-def webhook_listener(payload: WebhookPayload, db: Session = Depends(get_db)):
+def webhook_listener(payload: WebhookPayload, db: Session = Depends(get_db_session)):
     """
     Receives Radarr webhook → inserts into SQLite job table
     """
@@ -50,7 +50,7 @@ def webhook_listener(payload: WebhookPayload, db: Session = Depends(get_db)):
     )
 
 @app.get("/job/next" , response_model=JobResponse)
-def get_next_job(db: Session = Depends(get_db)):
+def get_next_job(db: Session = Depends(get_db_session)):
     # Query for the next pending job
     next_job = db.query(Job).filter(Job.status == "pending").order_by(Job.created_at.asc()).first()
 
@@ -70,7 +70,7 @@ def get_next_job(db: Session = Depends(get_db)):
     )
     
 @app.patch("/job/{job_id}", response_model=JobResponse)
-def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db)):
+def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db_session)):
     job = db.query(Job).filter(Job.id == job_id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
