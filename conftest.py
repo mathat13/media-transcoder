@@ -19,10 +19,12 @@ TestingSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=Fals
 
 Base.metadata.create_all(bind=engine)
 
-
 @pytest.fixture()
 def db_session():
     """Fresh DB session for each test."""
+    Base.metadata.drop_all(bind=engine)   # reset DB
+    Base.metadata.create_all(bind=engine)
+
     session = TestingSessionLocal()
     JobFactory._meta.sqlalchemy_session = session
 
