@@ -10,6 +10,16 @@ app = FastAPI()
 class WebhookPayload(BaseModel):
     path: str
 
+class RadarrMovie(BaseModel):
+    id: int
+    title: str
+    year: int
+    path: str
+
+class RadarrWebhookPayload(BaseModel):
+    eventType: str
+    movie: RadarrMovie
+
 class JobResponse(BaseModel):
     id: int
     path: str
@@ -27,18 +37,25 @@ def get_db_session():
     finally:
         session.close()
 
-@app.post("/webhook", response_model=JobResponse)
-def webhook_listener(payload: WebhookPayload, db: Session = Depends(get_db_session)):
+@app.post("/webhook/radarr", response_model=JobResponse)
+def webhook_listener(payload: RadarrWebhookPayload, db: Session = Depends(get_db_session)):
     """
     Receives Radarr webhook → inserts into SQLite job table
     """
+
+    # Only act on movie downloads
+    if payload.eventType != "Download":
+        raise HTTPException(status_code=204, detail="Ignoring event")
+    
+    movie_path = payload.movie.path
+
     # Check if job already exists (prevents duplicates)
-    existing = db.query(Job).filter(Job.path == payload.path).first()
+    existing = db.query(Job).filter(Job.path == movie_path).first()
     if existing:
         raise HTTPException(status_code=400, detail="Job already exists")
 
     # Create and save the new job
-    new_job = Job(path=payload.path, status="pending")
+    new_job = Job(path=movie_path, status="pending")
     db.add(new_job)
     db.commit()
     db.refresh(new_job)  # refresh gets the auto-generated job ID
