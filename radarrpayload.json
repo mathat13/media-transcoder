@@ -1,0 +1,58 @@
+{
+  "movie": {
+    "id": 102,
+    "title": "Cockneys vs Zombies",
+    "year": 2012,
+    "releaseDate": "2013-04-17",
+    "folderPath": "/data/media/movies/Cockneys vs Zombies (2012)",
+    "tmdbId": 114606,
+    "imdbId": "tt1362058",
+    "overview": "A group of Cockneys arm themselves to rescue their elderly relative and his retirement home friends who are trapped and fighting off a zombie attack during a zombie apocalypse in the East End of London.",
+    "tags": []
+  },
+  "remoteMovie": {
+    "tmdbId": 114606,
+    "imdbId": "tt1362058",
+    "title": "Cockneys vs Zombies",
+    "year": 2012
+  },
+  "movieFile": {
+    "id": 106,
+    "relativePath": "Cockneys vs Zombies (2012) Bluray-1080p.mp4",
+    "path": "/data/torrents/movies/Cockneys vs Zombies (2012) [1080p]/Cockneys.vs.Zombies.2012.1080p.BRrip.x264.YIFY.mp4",
+    "quality": "Bluray-1080p",
+    "qualityVersion": 1,
+    "releaseGroup": "YIFY",
+    "sceneName": "Cockneys vs Zombies (2012) 1080p BrRip x264 - YIFY",
+    "indexerFlags": "0",
+    "size": 1392725639,
+    "dateAdded": "2025-11-03T14:27:48.9288116Z",
+    "mediaInfo": {
+      "audioChannels": 2.0,
+      "audioCodec": "AAC",
+      "audioLanguages": [
+        "eng"
+      ],
+      "height": 816,
+      "width": 1920,
+      "subtitles": [],
+      "videoCodec": "x264",
+      "videoDynamicRange": "",
+      "videoDynamicRangeType": ""
+    }
+  },
+  "isUpgrade": false,
+  "downloadClient": "qBittorrent",
+  "downloadClientType": "qBittorrent",
+  "downloadId": "B9D7239D1543D97A05060AFC2DE376C483D82924",
+  "customFormatInfo": {
+    "customFormats": [],
+    "customFormatScore": 0
+  },
+  "release": {
+    "size": 0
+  },
+  "eventType": "Download",
+  "instanceName": "Radarr",
+  "applicationUrl": ""
+}

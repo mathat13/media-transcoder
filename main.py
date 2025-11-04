@@ -1,10 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, List
 from db import SessionLocal, Job
-
-app = FastAPI()
+import os
+from os import path
 
 # Pydantic models\
 class WebhookPayload(BaseModel):
@@ -14,11 +14,63 @@ class RadarrMovie(BaseModel):
     id: int
     title: str
     year: int
+    releaseDate: str
+    folderPath: str
+    tmdbId: int
+    imdbId: str
+    overview: str
+    tags: List[str]
+
+class RadarrRemoteMovie(BaseModel):
+    tmdbId: int
+    imdbId: str
+    title: str
+    year: int
+
+class RadarrMediaInfo(BaseModel):
+    audioChannels: float
+    audioCodec: str
+    audioLanguages: List[str]
+    height: int
+    width: int
+    subtitles: List[str]
+    videoCodec: str
+    videoDynamicRange: str
+    videoDynamicRangeType: str
+
+class RadarrMovieFile(BaseModel):
+    id: int
+    relativePath: str
     path: str
+    quality: str
+    qualityVersion: int
+    releaseGroup: str
+    sceneName: str
+    indexerFlags: str
+    size: int
+    dateAdded: str
+    mediaInfo: RadarrMediaInfo
+
+class RadarrCustomFormatInfo(BaseModel):
+    customFormats: List[str]
+    customFormatScore: int
+
+class RadarrRelease(BaseModel):
+    size: int
 
 class RadarrWebhookPayload(BaseModel):
-    eventType: str
     movie: RadarrMovie
+    remoteMovie: RadarrRemoteMovie
+    movieFile: RadarrMovieFile
+    isUpgrade: bool
+    downloadClient: str
+    downloadClientType: str
+    downloadId: str
+    customFormatInfo: RadarrCustomFormatInfo
+    release: RadarrRelease
+    eventType: str
+    instanceName: str
+    applicationUrl: str
 
 class JobResponse(BaseModel):
     id: int
@@ -28,6 +80,8 @@ class JobResponse(BaseModel):
 class JobUpdate(BaseModel):
     status: Optional[str] = None
     path: Optional[str] = None
+
+app = FastAPI()
 
 # Dependency to get db session
 def get_db_session():
@@ -47,7 +101,7 @@ def webhook_listener(payload: RadarrWebhookPayload, db: Session = Depends(get_db
     if payload.eventType != "Download":
         raise HTTPException(status_code=204, detail="Ignoring event")
     
-    movie_path = payload.movie.path
+    movie_path = os.path.join(payload.movie.folderPath, payload.movieFile.relativePath)
 
     # Check if job already exists (prevents duplicates)
     existing = db.query(Job).filter(Job.path == movie_path).first()

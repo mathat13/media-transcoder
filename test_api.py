@@ -7,7 +7,8 @@ client = TestClient(app)
 
 
 def test_webhook_creates_job(db_session):
-    response = client.post("/webhook", json={"path": "/test/video.mkv"})
+    response = client.post("/webhook/radarr",
+    json={"path": "/test/video.mkv"})
     assert response.status_code == 200
     data = response.json()
     assert data["path"] == "/test/video.mkv"
