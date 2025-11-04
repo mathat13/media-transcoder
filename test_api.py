@@ -1,18 +1,24 @@
 from fastapi.testclient import TestClient
 from main import app
 from conftest import TestingSessionLocal
-from factories import JobFactory
+from factories import JobFactory, RadarrWebhookPayloadFactory
+import os
 
 client = TestClient(app)
 
+def test_radarr_webhook_creates_job(db_session):
+    payload = RadarrWebhookPayloadFactory()
 
-def test_webhook_creates_job(db_session):
-    response = client.post("/webhook/radarr",
-    json={"path": "/test/video.mkv"})
+    response = client.post(
+        "/webhook/radarr",
+        json=payload.model_dump()
+    )
+
     assert response.status_code == 200
     data = response.json()
-    assert data["path"] == "/test/video.mkv"
+
     assert data["status"] == "pending"
+    assert data["path"] in os.path.join(payload.movie.folderPath, payload.movieFile.relativePath)
     
 def test_worker_updates_job(db_session):
     job = JobFactory(status="processing")

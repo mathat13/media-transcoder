@@ -1,7 +1,6 @@
 from typing import List
 from pydantic import BaseModel
 
-
 class RadarrMovie(BaseModel):
     id: int
     title: str
