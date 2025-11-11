@@ -1,0 +1,48 @@
+@startuml
+title media_transcoder
+node app
+
+node worker
+
+node jellyfin
+
+node radarr
+
+node sonarr
+
+node job_db
+
+node radarr_watch
+
+node jellyfin_watch
+
+worker --> app
+note on link
+  Worker periodically pulls jobs from app
+end note
+
+app --> jellyfin
+note on link
+  Request jellyfin rescan library on successful transcode
+end note
+app --> job_db
+note on link
+  App saves jobs recieved by webhooks to job_db
+end note
+radarr --> app
+note on link
+  radarr webhook on file import
+end note
+sonarr --> app
+note on link
+  sonarr webhook on file import
+end note
+app --> sonarr
+note on link
+  Request sonarr update file on successful transcode
+end note
+app --> radarr
+note on link
+  Request radarr update file on successful transcode
+end note
+@enduml
