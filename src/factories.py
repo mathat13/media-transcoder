@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
-from db import Job  # import your SQLAlchemy model
-from radarr_schemas import (
+from src.db import Job  # import your SQLAlchemy model
+from src.schemas.radarr import (
     RadarrMovie,
     RadarrRemoteMovie,
     RadarrMovieFile,

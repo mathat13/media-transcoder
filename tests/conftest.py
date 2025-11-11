@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from db import Base
-from factories import JobFactory
+from src.db import Base
+from src.factories import JobFactory
 from main import app, get_db_session
 
 TEST_DATABASE_URL = "sqlite:///:memory:"

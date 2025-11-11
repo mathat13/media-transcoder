@@ -2,10 +2,10 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional, List
-from db import SessionLocal, Job
+from src.db import SessionLocal, Job
 import os
 from os import path
-from radarr_schemas import RadarrWebhookPayload
+from src.schemas.radarr import RadarrWebhookPayload
 
 # Pydantic models\
 class JobResponse(BaseModel):

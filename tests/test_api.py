@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from main import app
-from conftest import TestingSessionLocal
-from factories import JobFactory, RadarrWebhookPayloadFactory
+from tests.conftest import TestingSessionLocal
+from src.factories import JobFactory, RadarrWebhookPayloadFactory
 import os
 
 client = TestClient(app)
