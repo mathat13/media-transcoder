@@ -6,6 +6,7 @@ from src.db import SessionLocal, Job
 import os
 from os import path
 from src.schemas.radarr import RadarrWebhookPayload
+from src.schemas.sonarr import SonarrWebhookPayload
 
 # Pydantic models\
 class JobResponse(BaseModel):
@@ -46,6 +47,35 @@ def webhook_listener(payload: RadarrWebhookPayload, db: Session = Depends(get_db
 
     # Create and save the new job
     new_job = Job(path=movie_path, status="pending")
+    db.add(new_job)
+    db.commit()
+    db.refresh(new_job)  # refresh gets the auto-generated job ID
+
+    return JobResponse(
+        id=new_job.id,
+        path=new_job.path,
+        status=new_job.status
+    )
+
+@app.post("/webhook/sonarr", response_model=JobResponse)
+def webhook_listener(payload: SonarrWebhookPayload, db: Session = Depends(get_db_session)):
+    """
+    Receives Sonarr webhook → inserts into SQLite job table
+    """
+
+    # Only act on import downloads
+    if payload.eventType != "Download":
+        raise HTTPException(status_code=204, detail="Ignoring event")
+    
+    episode_path = payload.episodeFile.path
+
+    # Check if job already exists (prevents duplicates)
+    existing = db.query(Job).filter(Job.path == episode_path).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Job already exists")
+
+    # Create and save the new job
+    new_job = Job(path=episode_path, status="pending")
     db.add(new_job)
     db.commit()
     db.refresh(new_job)  # refresh gets the auto-generated job ID

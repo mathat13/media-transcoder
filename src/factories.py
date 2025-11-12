@@ -2,16 +2,28 @@ import factory
 from faker import Faker
 from src.db import Job  # import your SQLAlchemy model
 from src.schemas.radarr import (
-    RadarrMovie,
-    RadarrRemoteMovie,
-    RadarrMovieFile,
+    Movie,
+    RemoteMovie,
+    MovieFile,
     RadarrMediaInfo,
     RadarrCustomFormatInfo,
     RadarrRelease,
     RadarrWebhookPayload,
 )
 
+from src.schemas.sonarr import (
+    Series,
+    RemoteSeries,
+    EpisodeFile,
+    SonarrMediaInfo,
+    SonarrCustomFormatInfo,
+    SonarrRelease,
+    SonarrWebhookPayload
+)
+
 fake = Faker()
+
+# Job factory
 
 class JobFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -22,6 +34,7 @@ class JobFactory(factory.alchemy.SQLAlchemyModelFactory):
     path = factory.LazyFunction(lambda: fake.file_path(extension="mkv"))
     status = "pending"
 
+# Radarr webhook payload factories
 
 class RadarrMediaInfoFactory(factory.Factory):
     class Meta:
@@ -39,7 +52,7 @@ class RadarrMediaInfoFactory(factory.Factory):
 
 class RadarrMovieFileFactory(factory.Factory):
     class Meta:
-        model = RadarrMovieFile
+        model = MovieFile
 
     id = factory.Sequence(lambda n: n + 1)
     relativePath = factory.LazyFunction(lambda: fake.file_name(extension="mkv"))
@@ -55,7 +68,7 @@ class RadarrMovieFileFactory(factory.Factory):
 
 class RadarrMovieFactory(factory.Factory):
     class Meta:
-        model = RadarrMovie
+        model = Movie
 
     id = factory.Sequence(lambda n: n + 1)
     title = factory.LazyFunction(lambda: fake.sentence(nb_words=3))
@@ -69,7 +82,7 @@ class RadarrMovieFactory(factory.Factory):
 
 class RadarrRemoteMovieFactory(factory.Factory):
     class Meta:
-        model = RadarrRemoteMovie
+        model = RemoteMovie
 
     tmdbId = factory.LazyFunction(lambda: fake.random_int(min=1000, max=999999))
     imdbId = factory.LazyFunction(lambda: "tt" + str(fake.random_int(min=1000000, max=9999999)))
@@ -107,3 +120,6 @@ class RadarrWebhookPayloadFactory(factory.Factory):
     eventType = "Download"
     instanceName = "Radarr"
     applicationUrl = ""
+
+# Sonarr webhook payload factories
+
