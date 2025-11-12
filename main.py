@@ -2,9 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional, List
+
 from src.db import SessionLocal, Job
-import os
-from os import path
 from src.schemas.radarr import RadarrWebhookPayload
 from src.schemas.sonarr import SonarrWebhookPayload
 
@@ -38,7 +37,7 @@ def webhook_listener(payload: RadarrWebhookPayload, db: Session = Depends(get_db
     if payload.eventType != "Download":
         raise HTTPException(status_code=204, detail="Ignoring event")
     
-    movie_path = os.path.join(payload.movie.folderPath, payload.movieFile.relativePath)
+    movie_path = payload.movieFile.path
 
     # Check if job already exists (prevents duplicates)
     existing = db.query(Job).filter(Job.path == movie_path).first()
@@ -128,4 +127,3 @@ def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db_sessi
     )
 
 # Add database deletion api call here
-# Will need to integrate with jellyfin and radarr to assure that database deletion is safe
