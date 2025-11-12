@@ -1,5 +1,5 @@
-from typing import List
 from pydantic import BaseModel
+from typing import List
 
 class RadarrMovie(BaseModel):
     id: int
@@ -10,7 +10,8 @@ class RadarrMovie(BaseModel):
     tmdbId: int
     imdbId: str
     overview: str
-    tags: List[str]
+    tags: List
+
 
 class RadarrRemoteMovie(BaseModel):
     tmdbId: int
@@ -18,16 +19,18 @@ class RadarrRemoteMovie(BaseModel):
     title: str
     year: int
 
+
 class RadarrMediaInfo(BaseModel):
     audioChannels: float
     audioCodec: str
     audioLanguages: List[str]
     height: int
     width: int
-    subtitles: List[str]
+    subtitles: List
     videoCodec: str
     videoDynamicRange: str
     videoDynamicRangeType: str
+
 
 class RadarrMovieFile(BaseModel):
     id: int
@@ -42,12 +45,15 @@ class RadarrMovieFile(BaseModel):
     dateAdded: str
     mediaInfo: RadarrMediaInfo
 
+
 class RadarrCustomFormatInfo(BaseModel):
-    customFormats: List[str]
+    customFormats: List
     customFormatScore: int
+
 
 class RadarrRelease(BaseModel):
     size: int
+
 
 class RadarrWebhookPayload(BaseModel):
     movie: RadarrMovie

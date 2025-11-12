@@ -1,56 +1,85 @@
 {
   "movie": {
-    "id": 102,
-    "title": "Cockneys vs Zombies",
-    "year": 2012,
-    "releaseDate": "2013-04-17",
-    "folderPath": "/data/media/movies/Cockneys vs Zombies (2012)",
-    "tmdbId": 114606,
-    "imdbId": "tt1362058",
-    "overview": "A group of Cockneys arm themselves to rescue their elderly relative and his retirement home friends who are trapped and fighting off a zombie attack during a zombie apocalypse in the East End of London.",
-    "tags": []
+    "id": 104,
+    "title": "Gone with the Wind",
+    "year": 1939,
+    "releaseDate": "2001-01-15",
+    "folderPath": "/data/media/movies/Gone with the Wind (1939)",
+    "tmdbId": 770,
+    "imdbId": "tt0031381",
+    "overview": "The spoiled daughter of a Georgia plantation owner conducts a tumultuous romance with a cynical profiteer during the American Civil War and Reconstruction Era.",
+    "genres": [
+      "Drama",
+      "War",
+      "Romance"
+    ],
+    "images": [
+      {
+        "coverType": "poster",
+        "url": "/MediaCover/104/poster.jpg?lastWrite=638984724696372916",
+        "remoteUrl": "https://image.tmdb.org/t/p/original/lNz2Ow0wGCAvzckW7EOjE03KcYv.jpg"
+      },
+      {
+        "coverType": "fanart",
+        "url": "/MediaCover/104/fanart.jpg?lastWrite=638984724698732917",
+        "remoteUrl": "https://image.tmdb.org/t/p/original/ft8WRF2xqEwwGWa59naDUybKTAx.jpg"
+      }
+    ],
+    "tags": [],
+    "originalLanguage": {
+      "id": 1,
+      "name": "English"
+    }
   },
   "remoteMovie": {
-    "tmdbId": 114606,
-    "imdbId": "tt1362058",
-    "title": "Cockneys vs Zombies",
-    "year": 2012
+    "tmdbId": 770,
+    "imdbId": "tt0031381",
+    "title": "Gone with the Wind",
+    "year": 1939
   },
   "movieFile": {
-    "id": 106,
-    "relativePath": "Cockneys vs Zombies (2012) Bluray-1080p.mp4",
-    "path": "/data/torrents/movies/Cockneys vs Zombies (2012) [1080p]/Cockneys.vs.Zombies.2012.1080p.BRrip.x264.YIFY.mp4",
-    "quality": "Bluray-1080p",
+    "id": 108,
+    "relativePath": "Gone with the Wind (1939) Bluray-720p.mkv",
+    "path": "/data/media/movies/Gone with the Wind (1939)/Gone with the Wind (1939) Bluray-720p.mkv",
+    "quality": "Bluray-720p",
     "qualityVersion": 1,
     "releaseGroup": "YIFY",
-    "sceneName": "Cockneys vs Zombies (2012) 1080p BrRip x264 - YIFY",
+    "sceneName": "Gone With The Wind (1939) 720p BrRip mkv - YIFY",
     "indexerFlags": "0",
-    "size": 1392725639,
-    "dateAdded": "2025-11-03T14:27:48.9288116Z",
+    "size": 1567438553,
+    "dateAdded": "2025-11-11T15:45:15.7379719Z",
+    "languages": [
+      {
+        "id": 1,
+        "name": "English"
+      }
+    ],
     "mediaInfo": {
-      "audioChannels": 2.0,
+      "audioChannels": 2,
       "audioCodec": "AAC",
-      "audioLanguages": [
+      "audioLanguages": [],
+      "height": 720,
+      "width": 992,
+      "subtitles": [
         "eng"
       ],
-      "height": 816,
-      "width": 1920,
-      "subtitles": [],
       "videoCodec": "x264",
       "videoDynamicRange": "",
       "videoDynamicRangeType": ""
-    }
+    },
+    "sourcePath": "/data/torrents/movies/Gone With The Wind (1939)/Gone.With.The.Wind.1939.720p.BluRay.x264.YIFY.mkv"
   },
   "isUpgrade": false,
   "downloadClient": "qBittorrent",
   "downloadClientType": "qBittorrent",
-  "downloadId": "B9D7239D1543D97A05060AFC2DE376C483D82924",
+  "downloadId": "1BD6246CC91284136BDB07C81A68CE983F934D4F",
   "customFormatInfo": {
     "customFormats": [],
     "customFormatScore": 0
   },
   "release": {
-    "size": 0
+    "size": 0,
+    "indexerFlags": []
   },
   "eventType": "Download",
   "instanceName": "Radarr",
