@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from main import app
 from tests.conftest import TestingSessionLocal
-from src.factories import JobFactory, RadarrWebhookPayloadFactory
+from src.factories import JobFactory, RadarrWebhookPayloadFactory, SonarrWebhookPayloadFactory
 import os
 
 client = TestClient(app)
@@ -19,6 +19,20 @@ def test_radarr_webhook_creates_job(db_session):
 
     assert data["status"] == "pending"
     assert data["path"] in os.path.join(payload.movie.folderPath, payload.movieFile.relativePath)
+
+def test_sonarr_webhook_creates_job(db_session):
+    payload = SonarrWebhookPayloadFactory()
+
+    response = client.post(
+        "/webhook/sonarr",
+        json=payload.model_dump()
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["status"] == "pending"
+    assert data["path"] in payload.episodeFile.path
     
 def test_worker_updates_job(db_session):
     job = JobFactory(status="processing")
