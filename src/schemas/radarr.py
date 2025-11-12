@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
-class RadarrMovie(BaseModel):
+class Movie(BaseModel):
     id: int
     title: str
     year: int
@@ -12,13 +12,11 @@ class RadarrMovie(BaseModel):
     overview: str
     tags: List
 
-
-class RadarrRemoteMovie(BaseModel):
+class RemoteMovie(BaseModel):
     tmdbId: int
     imdbId: str
     title: str
     year: int
-
 
 class RadarrMediaInfo(BaseModel):
     audioChannels: float
@@ -31,8 +29,7 @@ class RadarrMediaInfo(BaseModel):
     videoDynamicRange: str
     videoDynamicRangeType: str
 
-
-class RadarrMovieFile(BaseModel):
+class MovieFile(BaseModel):
     id: int
     relativePath: str
     path: str
@@ -45,20 +42,17 @@ class RadarrMovieFile(BaseModel):
     dateAdded: str
     mediaInfo: RadarrMediaInfo
 
-
 class RadarrCustomFormatInfo(BaseModel):
     customFormats: List
     customFormatScore: int
 
-
 class RadarrRelease(BaseModel):
     size: int
 
-
 class RadarrWebhookPayload(BaseModel):
-    movie: RadarrMovie
-    remoteMovie: RadarrRemoteMovie
-    movieFile: RadarrMovieFile
+    movie: Movie
+    remoteMovie: RemoteMovie
+    movieFile: MovieFile
     isUpgrade: bool
     downloadClient: str
     downloadClientType: str
