@@ -85,9 +85,7 @@ def webhook_listener(payload: SonarrWebhookPayload, db: Session = Depends(get_db
 
 @app.get("/job/next", response_model=JobResponse)
 def get_next_job(db: Session = Depends(get_db_session)):
-    service = JobService(db)
-    job = service.get_next_pending_job()
-    return job
+    return JobService(db).get_next_pending_job()
     
 @app.patch("/job/{job_id}", response_model=JobResponse)
 def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db_session)):
