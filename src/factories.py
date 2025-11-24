@@ -1,6 +1,9 @@
 import factory
 from faker import Faker
 from src.db import Job  # import your SQLAlchemy model
+import datetime
+from sqlalchemy import Column, DateTime
+
 from src.schemas.radarr import (
     Movie,
     RemoteMovie,
@@ -34,9 +37,13 @@ class JobFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = None  # we will inject the test DB session
         sqlalchemy_session_persistence = "commit"
 
-    path = factory.LazyFunction(lambda: fake.file_path(extension="mkv"))
+    id = factory.Sequence(lambda n: n + 1)
+    job_type = "episode"
+    source_path = factory.LazyFunction(lambda: fake.file_name(extension="mkv"))
+    output_path = factory.LazyFunction(lambda: fake.file_name(extension="mkv"))
     status = "pending"
-
+    created_at = factory.LazyFunction(lambda: fake.date_time_this_year(tzinfo=datetime.timezone.utc))
+    updated_at = factory.LazyFunction(lambda: fake.date_time_this_year(tzinfo=datetime.timezone.utc))
 # Radarr webhook payload factories
 
 # ---------- Nested Factories ----------

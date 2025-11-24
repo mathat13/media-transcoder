@@ -48,5 +48,5 @@ def test_worker_gets_next_job(db_session):
     response = client.get("/job/next")
     assert response.status_code == 200
     data = response.json()
-    assert data["path"] == job.path
+    assert data["source_path"] == job.source_path
     assert data["status"] == "processing"

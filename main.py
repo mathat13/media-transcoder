@@ -4,14 +4,11 @@ from sqlalchemy.orm import Session
 from typing import Optional, List
 
 from src.db import SessionLocal, Job
+from src.JobService import JobService, JobResponse, JobStatus
 from src.schemas.radarr import RadarrWebhookPayload
 from src.schemas.sonarr import SonarrWebhookPayload
 
 # Pydantic models\
-class JobResponse(BaseModel):
-    id: int
-    path: str
-    status: str
 
 class JobUpdate(BaseModel):
     status: Optional[str] = None
@@ -45,7 +42,7 @@ def webhook_listener(payload: RadarrWebhookPayload, db: Session = Depends(get_db
         raise HTTPException(status_code=400, detail="Job already exists")
 
     # Create and save the new job
-    new_job = Job(path=movie_path, status="pending")
+    new_job = Job(job_type="movie", source_path=movie_path, status="pending")
     db.add(new_job)
     db.commit()
     db.refresh(new_job)  # refresh gets the auto-generated job ID
@@ -85,25 +82,12 @@ def webhook_listener(payload: SonarrWebhookPayload, db: Session = Depends(get_db
         status=new_job.status
     )
 
-@app.get("/job/next" , response_model=JobResponse)
+
+@app.get("/job/next", response_model=JobResponse)
 def get_next_job(db: Session = Depends(get_db_session)):
-    # Query for the next pending job
-    next_job = db.query(Job).filter(Job.status == "pending").order_by(Job.created_at.asc()).first()
-
-    # Return error if no pending jobs
-    if next_job is None:
-        raise HTTPException(status_code=404, detail="No pending jobs available")
-    
-    # Update job status to processing
-    setattr(next_job, 'status', 'processing')
-    db.commit()
-    db.refresh(next_job)
-
-    return JobResponse(
-        id=next_job.id,
-        path=next_job.path,
-        status=next_job.status
-    )
+    service = JobService(db)
+    job = service.get_next_pending_job()
+    return job
     
 @app.patch("/job/{job_id}", response_model=JobResponse)
 def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db_session)):

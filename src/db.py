@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, create_engine, JSON
 from sqlalchemy.orm import sessionmaker, declarative_base
 import datetime
 
@@ -12,11 +12,13 @@ class Job(Base):
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
-    path = Column(String, unique=True, index=True)
-    status = Column(String, default="pending")  # pending, processing, complete, error
-    created_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC))
-    updated_at = Column(DateTime, default=datetime.datetime.now(datetime.UTC), onupdate=datetime.datetime.now(datetime.UTC))
-    error_reason = Column(String, nullable=True)
+    job_type = Column(String, nullable=False)           # e.g. "movie" or "episode"
+    source_path = Column(String, nullable=False)        # original file path
+    output_path = Column(String, nullable=True)         # final transcoded file
+    status = Column(String, default="pending")          # current workflow state
+    created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    updated_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc), onupdate=datetime.datetime.now(datetime.timezone.utc))
+    # metadata = Column(JSON, nullable=True)              # optional extra info
 
 # Create the table
 Base.metadata.create_all(bind=engine)
