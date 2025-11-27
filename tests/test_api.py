@@ -49,4 +49,5 @@ def test_worker_gets_next_job(db_session):
     assert response.status_code == 200
     data = response.json()
     assert data["source_path"] == job.source_path
+    assert data["output_path"] == job.output_path
     assert data["status"] == "processing"

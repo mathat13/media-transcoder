@@ -25,6 +25,7 @@ class JobStatus(str, Enum):
 class JobResponse(BaseModel):
     id: int
     source_path: str
+    output_path: str
     status: JobStatus
 
     created_at: Optional[datetime.datetime] = None
@@ -54,6 +55,7 @@ class JobService:
 
         return self._transition(job, "processing")
 
+    #def add_job(self,)
     def complete_job(self, job_id: int):
         """Mark job as validating → done if successful."""
         job = self.db.query(Job).filter(Job.id == job_id).first()
