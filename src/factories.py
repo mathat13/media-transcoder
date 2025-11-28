@@ -1,6 +1,7 @@
 import factory
 from faker import Faker
 from src.db import Job  # import your SQLAlchemy model
+from src.JobService import JobValidationRequest
 import datetime
 from sqlalchemy import Column, DateTime
 
@@ -44,6 +45,13 @@ class JobFactory(factory.alchemy.SQLAlchemyModelFactory):
     status = "pending"
     created_at = factory.LazyFunction(lambda: fake.date_time_this_year(tzinfo=datetime.timezone.utc))
     updated_at = factory.LazyFunction(lambda: fake.date_time_this_year(tzinfo=datetime.timezone.utc))
+
+class JobValidationRequestFactory(factory.Factory):
+    class Meta:
+        model = JobValidationRequest
+
+    output_path = factory.LazyFunction(lambda: fake.file_name(extension="mkv"))
+
 # Radarr webhook payload factories
 
 # ---------- Nested Factories ----------

@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Body
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional, List
 
 from src.db import SessionLocal, Job
-from src.JobService import JobService, JobResponse, JobStatus
+from src.JobService import JobService, JobResponse, JobValidationRequest
 from src.schemas.radarr import RadarrWebhookPayload
 from src.schemas.sonarr import SonarrWebhookPayload
 
@@ -88,24 +88,29 @@ def get_next_job(db: Session = Depends(get_db_session)):
     return JobService(db).get_next_pending_job()
     
 @app.patch("/job/{job_id}", response_model=JobResponse)
-def patch_job(job_id: int, update: JobUpdate, db: Session = Depends(get_db_session)):
-    job = db.query(Job).filter(Job.id == job_id).first()
-    if not job:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    if update.status is not None:
-        job.status = update.status
-
-    if update.path is not None:
-        job.path = update.path
-    
-    db.commit()
-    db.refresh(job)
-
-    return JobResponse(
-        id=job.id,
-        path=job.path,
-        status=job.status
-    )
+def validate_job(
+    job_id: int,
+    payload: JobValidationRequest = Body(...),
+    db: Session = Depends(get_db_session),
+):
+    return JobService(db).validate_job(job_id, payload.output_path)
+    # job = db.query(Job).filter(Job.id == job_id).first()
+    # if not job:
+    #     raise HTTPException(status_code=404, detail="Job not found")
+    # 
+    # if update.status is not None:
+    #     job.status = update.status
+# 
+    # if update.path is not None:
+    #     job.path = update.path
+    # 
+    # db.commit()
+    # db.refresh(job)
+# 
+    # return JobResponse(
+    #     id=job.id,
+    #     path=job.path,
+    #     status=job.status
+    # )
 
 # Add database deletion api call here
